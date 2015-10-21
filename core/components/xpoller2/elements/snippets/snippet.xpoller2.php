@@ -1,7 +1,7 @@
 <?php
 $xPoller2 = $modx->getService('xpoller2','xPoller2',$modx->getOption('xpoller2_core_path',null,$modx->getOption('core_path').'components/xpoller2/').'model/xpoller2/',$scriptProperties);
 if (!($xPoller2 instanceof xPoller2)) return '';
-$modx->regClientScript($modx->getOption('xpoller2_assets_url').'js/web/default.js');
+$modx->regClientScript($modx->getOption('assets_url').'components/xpoller/js/web/default.js');
 $modx->lexicon->load('xpoller2:translations');
 
 if (empty($formOuterTpl)) {$formOuterTpl = "tpl.xPoller2.form.outer";}
