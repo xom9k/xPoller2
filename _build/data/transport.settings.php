@@ -9,7 +9,7 @@ $tmp = array(
 		'area' => 'xpoller2_main',
 	),
 	'culturekeys_list' => array(
-		'xtype' => 'combo-textfield',
+		'xtype' => 'textfield',
 		'value' => 'ru,en,kz',
 		'area' => 'xpoller2_main',
 	),
