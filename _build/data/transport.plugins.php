@@ -3,8 +3,8 @@
 $plugins = array();
 
 $tmp = array(
-	'xPoller' => array(
-		'file' => 'xpoller',
+	'xPoller2' => array(
+		'file' => 'xpoller2',
 		'description' => '',
 		'events' => array(
 			'OnManagerPageInit' => array()

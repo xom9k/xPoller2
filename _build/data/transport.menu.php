@@ -3,8 +3,8 @@
 $menus = array();
 
 $tmp = array(
-	'xpoller' => array(
-		'description' => 'xpoller_menu_desc',
+	'xpoller2' => array(
+		'description' => 'xpoller2_menu_desc',
 		'action' => array(
 			'controller' => 'index',
 		),

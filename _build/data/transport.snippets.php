@@ -3,12 +3,12 @@
 $snippets = array();
 
 $tmp = array(
-	'xPoller' => array(
-		'file' => 'xpoller',
+	'xPoller2' => array(
+		'file' => 'xpoller2',
 		'description' => '',
 	),
-	/*'xPollerTest' => array(
-		'file' => 'xpollertest',
+	/*'xPoller2Test' => array(
+		'file' => 'xpoller2test',
 		'description' => '',
 	),*/
 );

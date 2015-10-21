@@ -1,1 +1,0 @@
-<div id="xpoller-panel-questions-div"></div>

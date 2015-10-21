@@ -6,7 +6,12 @@ $tmp = array(
 	'some_setting' => array(
 		'xtype' => 'combo-boolean',
 		'value' => true,
-		'area' => 'xpoller_main',
+		'area' => 'xpoller2_main',
+	),
+	'culturekeys_list' => array(
+		'xtype' => 'combo-textfield',
+		'value' => 'ru,en,kz',
+		'area' => 'xpoller2_main',
 	),
 );
 
@@ -15,7 +20,7 @@ foreach ($tmp as $k => $v) {
 	$setting = $modx->newObject('modSystemSetting');
 	$setting->fromArray(array_merge(
 		array(
-			'key' => 'xpoller_'.$k,
+			'key' => 'xpoller2_'.$k,
 			'namespace' => PKG_NAME_LOWER,
 		), $v
 	),'',true,true);

@@ -6,8 +6,8 @@ if ($object->xpdo) {
 
 	switch ($options[xPDOTransport::PACKAGE_ACTION]) {
 		case xPDOTransport::ACTION_INSTALL:
-			$modelPath = $modx->getOption('xpoller_core_path',null,$modx->getOption('core_path').'components/xpoller/').'model/';
-			$modx->addPackage('xpoller', $modelPath);
+			$modelPath = $modx->getOption('xpoller2_core_path',null,$modx->getOption('core_path').'components/xpoller2/').'model/';
+			$modx->addPackage('xpoller2', $modelPath);
 
 			$manager = $modx->getManager();
 			$objects = array(

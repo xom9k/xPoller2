@@ -3,23 +3,23 @@
 $chunks = array();
 
 $tmp = array(
-	'tpl.xPoller.form.outer' => array(
+	'tpl.xPoller2.form.outer' => array(
 		'file' => 'form.outer',
 		'description' => '',
 	),
-	'tpl.xPoller.form.test.outer' => array(
+	'tpl.xPoller2.form.test.outer' => array(
 		'file' => 'form.test.outer',
 		'description' => '',
 	),
-	'tpl.xPoller.result.outer' => array(
+	'tpl.xPoller2.result.outer' => array(
 		'file' => 'result.outer',
 		'description' => '',
 	),
-	'tpl.xPoller.option' => array(
+	'tpl.xPoller2.option' => array(
 		'file' => 'option',
 		'description' => '',
 	),
-	'tpl.xPoller.result' => array(
+	'tpl.xPoller2.result' => array(
 		'file' => 'result',
 		'description' => '',
 	),
