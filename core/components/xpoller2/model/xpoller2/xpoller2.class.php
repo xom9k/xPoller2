@@ -133,5 +133,13 @@ class xPoller2 {
 
 		return $chunk;
 	}
-
+	
+	public function setxPoller2Cookie($qid) {
+		$xpVotedString = "";
+		if(isset($_COOKIE['xpVoted'])) $xpVotedString = $_COOKIE['xpVoted'];
+	    $xpVotedString .= $qid . ',';
+	    setCookie('xpVoted', $xpVotedString, time()+360000000, '/');
+	    
+	    return true;
+	}
 }

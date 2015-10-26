@@ -10,18 +10,18 @@ if (empty($optionTpl)) {$optionTpl = "tpl.xPoller2.option";}
 if (empty($resultTpl)) {$resultTpl = "tpl.xPoller2.result";}
 if (empty($outputSeparator)) {$resultTpl = "\n";}
 if (empty($id)) {
-	$q = $modx->newQuery( "xpQuestion" );
-	$q->sortby('id','DESC');
-	$q->limit(1);
-	$q->select( array( "id" ) );
-	$s = $q->prepare(); //print $q->toSQL(); die;
-	$s->execute();
-	$idArray = $s->fetch(PDO::FETCH_ASSOC);
-	if(!empty($idArray)) {
-		$id = $idArray['id'];
-	} else {
-		return $modx->lexicon("xpoller2_question_err_ns");
-	}
+    $q = $modx->newQuery( "xpQuestion" );
+    $q->sortby('id','DESC');
+    $q->limit(1);
+    $q->select( array( "id" ) );
+    $s = $q->prepare(); //print $q->toSQL(); die;
+    $s->execute();
+    $idArray = $s->fetch(PDO::FETCH_ASSOC);
+    if(!empty($idArray)) {
+        $id = $idArray['id'];
+    } else {
+        return $modx->lexicon("xpoller2_question_err_ns");
+    }
 }
 
 
@@ -38,21 +38,13 @@ if (!$modx->user->isAuthenticated($modx->context->key)) {
 }
 $uip = $_SERVER["REMOTE_ADDR"]; 
 $abstain = false;
-function setxPoller2Cookie() {
-	$xpVotedString = "";
-	if(isset($_COOKIE['xpVoted'])) $xpVotedString = $_COOKIE['xpVoted'];
-    $xpVotedString .= $_REQUEST['qid'] . ',';
-    setCookie('xpVoted', $xpVotedString, time()+360000000, '/');
-    
-    return true;
-}
 
 if (!empty($_REQUEST['xp_action']) && $_REQUEST['qid']) {
     $isAjax = isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest';
 
     if ($_REQUEST['xp_action'] == 'abstain') {
         $abstain = true;
-    	setxPoller2Cookie();
+        $xPoller2->setxPoller2Cookie($_REQUEST['qid']);
     } else {
         if ($_REQUEST['oid']) {
             $tmp = array('qid' => $id, 'uip' => $uip);
@@ -62,7 +54,7 @@ if (!empty($_REQUEST['xp_action']) && $_REQUEST['qid']) {
                 $answer->save();
                 unset($tmp);
             }
-            setxPoller2Cookie();
+            $xPoller2->setxPoller2Cookie($_REQUEST['qid']);
         }
     }
     unset($params['qid']);
@@ -114,11 +106,11 @@ if ($options) {
     if (empty($output['text'])) $output['text'] = $modx->lexicon("question_" . $options[0]['qid']);
     if (empty($output['id'])) $output['id'] = $options[0]['qid'];
     foreach ($options as $option) {
-    	if($output['maxVotes'] != 0) {
-    		$option['percentVotes'] = round($option['votes'] / $output['maxVotes'] * 100, 2);
-    	} else {
-    		$option['percentVotes'] = 0;
-    	}
+        if($output['maxVotes'] != 0) {
+            $option['percentVotes'] = round($option['votes'] / $output['maxVotes'] * 100, 2);
+        } else {
+            $option['percentVotes'] = 0;
+        }
         $option['option'] = $modx->lexicon("option_" . $option['qid'] ."_". $option['id']);
         // print_r($option);
         $output['options'][] = $xPoller2->getChunk($tpl,$option);
