@@ -23,8 +23,8 @@ if (empty($id)) {
         return $modx->lexicon("xpoller2_question_err_ns");
     }
 }
-
-
+$allowGuest = $modx->getOption('allowGuest',$scriptProperties,1); // Показывать форму по умолчанию
+$hideForm = false;
 
 if ($_REQUEST['qid'] && $_REQUEST['qid'] != $id) return '';
 
@@ -33,6 +33,7 @@ unset($params[$modx->getOption('request_param_alias')]);
 unset($params[$modx->getOption('request_param_id')]);
 if (!$modx->user->isAuthenticated($modx->context->key)) {
     $uid = 0;
+    if($allowGuest == 0 ) $hideForm = true;
 } else {
     $uid = $modx->user->id;
 }
@@ -47,7 +48,7 @@ if (!empty($_REQUEST['xp_action']) && $_REQUEST['qid']) {
         $xPoller2->setxPoller2Cookie($_REQUEST['qid']);
     } else {
         if ($_REQUEST['oid']) {
-            $tmp = array('qid' => $id, 'uip' => $uip);
+            $tmp = array('qid' => $id, 'uip' => $uip, 'uid' => $uid);
             if (!$modx->getObject('xpAnswer', $tmp)) {
                 $tmp['oid'] = $_REQUEST['oid'];
                 $answer = $modx->newObject('xpAnswer', $tmp);
@@ -68,14 +69,24 @@ if (!empty($_REQUEST['xp_action']) && $_REQUEST['qid']) {
 }
 
 
-
-if ($modx->getObject('xpAnswer', array('uip' => $uip, 'qid' => $id)) || in_array($id, explode(",", $_COOKIE['xpVoted'])) || $abstain == true) {
-    $tpl = $resultTpl;
-    $outerTpl = $resultOuterTpl;
+if (!$modx->user->isAuthenticated($modx->context->key)) {
+    if ($modx->getObject('xpAnswer', array('uip' => $uip, 'qid' => $id)) || in_array($id, explode(",", $_COOKIE['xpVoted'])) || $abstain == true || $hideForm == true) {
+        $tpl = $resultTpl;
+        $outerTpl = $resultOuterTpl;
+    } else {
+        $tpl = $optionTpl;
+        $outerTpl = $formOuterTpl;
+    }
 } else {
-    $tpl = $optionTpl;
-    $outerTpl = $formOuterTpl;
+    if ($modx->getObject('xpAnswer', array('uid' => $uid, 'qid' => $id)) || $abstain == true || $hideForm == true) {
+        $tpl = $resultTpl;
+        $outerTpl = $resultOuterTpl;
+    } else {
+        $tpl = $optionTpl;
+        $outerTpl = $formOuterTpl;
+    }
 }
+
 
 $q = $modx->newQuery('xpOption');
 $q->where(array('qid' => $id));

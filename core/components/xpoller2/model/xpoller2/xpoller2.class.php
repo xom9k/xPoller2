@@ -135,11 +135,12 @@ class xPoller2 {
 	}
 	
 	public function setxPoller2Cookie($qid) {
-		$xpVotedString = "";
-		if(isset($_COOKIE['xpVoted'])) $xpVotedString = $_COOKIE['xpVoted'];
-	    $xpVotedString .= $qid . ',';
-	    setCookie('xpVoted', $xpVotedString, time()+360000000, '/');
-	    
+		if (!$this->modx->user->isAuthenticated($this->modx->context->key)) {
+		    $xpVotedString = "";
+			if(isset($_COOKIE['xpVoted'])) $xpVotedString = $_COOKIE['xpVoted'];
+		    $xpVotedString .= $qid . ',';
+		    setCookie('xpVoted', $xpVotedString, time()+360000000, '/');
+		}
 	    return true;
 	}
 }
