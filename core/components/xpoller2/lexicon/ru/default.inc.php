@@ -2,12 +2,12 @@
 
 include_once 'setting.inc.php';
 
-$_lang['xpoller2_item_err_nf'] = 'Предмет не найден.';
-$_lang['xpoller2_item_err_ns'] = 'Предмет не указан.';
+$_lang['xpoller2_item_err_nf'] = 'Опрос не найден.';
+$_lang['xpoller2_item_err_ns'] = 'Опрос не указан.';
 $_lang['xpoller2_item_err_remove'] = 'Ошибка при удалении Предмета.';
 $_lang['xpoller2_item_err_save'] = 'Ошибка при сохранении Предмета.';
-$_lang['xpoller2_item_update'] = 'Изменить Предмет';
-$_lang['xpoller2_intro_msg'] = 'Управляйте вашими предметами.';
+$_lang['xpoller2_item_update'] = 'Изменить Опрос';
+$_lang['xpoller2_intro_msg'] = 'Управляйте вашими опросами.';
 
 $_lang['xpoller2'] = 'xPoller2';
 $_lang['xpoller2_menu_desc'] = 'Управление опросами и тестами';
