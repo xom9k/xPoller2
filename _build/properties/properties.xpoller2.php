@@ -30,6 +30,10 @@ $tmp = array(
 		'type' => 'combo-boolean',
 		'value' => false,
 	),
+	'allowGuest' => array(
+		'type' => 'combo-boolean',
+		'value' => true,
+	),
 );
 
 foreach ($tmp as $k => $v) {
