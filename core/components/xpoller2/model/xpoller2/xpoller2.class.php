@@ -29,7 +29,7 @@ class xPoller2 {
 			'jsUrl' => $assetsUrl . 'js/',
 			'imagesUrl' => $assetsUrl . 'images/',
 			'connectorUrl' => $connectorUrl,
-
+			'actionUrl' => $assetsUrl . 'action.php',
 			'corePath' => $corePath,
 			'modelPath' => $corePath . 'model/',
 			'chunksPath' => $corePath . 'elements/chunks/',
@@ -41,6 +41,26 @@ class xPoller2 {
 
 		$this->modx->addPackage('xpoller2', $this->config['modelPath']);
 		$this->modx->lexicon->load('xpoller2:default');
+
+		if (!defined('MODX_API_MODE') || !MODX_API_MODE) {
+			$this->modx->regClientScript($this->config['jsUrl'].'web/default.js');
+			$this->modx->regClientCSS($this->config['cssUrl'].'web/default.css');
+			$this->modx->regClientStartupScript(preg_replace('#(\n|\t)#', '', '
+				<script type="text/javascript">
+				xPoller2Config = {
+					cssUrl: "' . $this->config['cssUrl'] . '",
+					jsUrl: "' . $this->config['jsUrl'] . '",
+					actionUrl: "' . $this->config['actionUrl'] . '"
+				};
+				</script>'), true);
+			$this->modx->regClientStartupScript(preg_replace('#(\n|\t)#', '', '
+			<script type="text/javascript">
+			if (typeof jQuery == "undefined") {
+				document.write("<script src=\"' . $this->config['jsUrl'] . 'web/lib/jquery.min.js\" type=\"text/javascript\"><\/script>");
+			}
+			</script>
+			'), true);
+		}
 	}
 
 
@@ -142,5 +162,10 @@ class xPoller2 {
 		    setCookie('xpVoted', $xpVotedString, time()+360000000, '/');
 		}
 	    return true;
+	}
+	public function saveSessionProperties($scriptProperties = array()) {
+		// session_destroy('xPoller2')
+		$_SESSION['xPoller2'] = $scriptProperties;
+		return true;
 	}
 }

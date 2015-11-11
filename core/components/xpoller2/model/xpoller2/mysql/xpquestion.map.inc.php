@@ -1,7 +1,7 @@
 <?php
 $xpdo_meta_map['xpQuestion']= array (
   'package' => 'xpoller2',
-  'version' => '1.1',
+  'version' => '1',
   'table' => 'xpoller2_questions',
   'extends' => 'xPDOSimpleObject',
   'fields' => 
@@ -10,7 +10,7 @@ $xpdo_meta_map['xpQuestion']= array (
     'text' => '',
     'closed' => 0,
     'rank' => 0,
-    'type' => 'radio',
+    'type' => '',
   ),
   'fieldMeta' => 
   array (

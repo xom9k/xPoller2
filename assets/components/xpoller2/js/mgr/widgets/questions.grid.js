@@ -9,7 +9,7 @@ xPoller2.grid.Questions = function(config) {
             ,type:  'question'
             ,tid: parseInt(MODx.request.test)
 		}
-		,fields: ['id','text','rank','closed']
+		,fields: ['id','text','type','closed']
 		,autoHeight: true
 		,paging: true
 		,remoteSort: true
@@ -17,8 +17,8 @@ xPoller2.grid.Questions = function(config) {
 		,columns: [
 			{header: _('id'),dataIndex: 'id',width: 50}
 			,{header: _('xpoller2_question_text'),dataIndex: 'text',width: 300}
-			/*,{header: _('xpoller2_rank'),dataIndex: 'rank',width: 80}*/
-			/*,{header: _('xpoller2_question_closed'),dataIndex: 'closed',width: 80}*/
+			,{header: _('xpoller2_question_type'),dataIndex: 'type',width: 80}
+			,{header: _('xpoller2_question_closed'),dataIndex: 'closed',width: 80}
 		]
 		,tbar: [{
 			text: _('xpoller2_question_create')
@@ -188,7 +188,27 @@ xPoller2.window.CreateItem = function(config) {
             ,tid: parseInt(MODx.request.test)
         }
 		,fields: [
-			{xtype: 'textfield',fieldLabel: _('xpoller2_question_text'),name: 'text',id: 'xpoller2-'+this.ident+'-text',anchor: '99%'}
+			{xtype: 'textfield',fieldLabel: _('xpoller2_question_text'),name: 'text',id: 'xpoller2-'+this.ident+'-text',anchor: '99%'},
+			{
+				xtype: 'fieldset',
+				title: _('xpoller2_question_type'),
+				items: [{
+		                xtype: 'radiogroup'
+		                ,hideLabel: true
+		                ,items: [{
+		                    boxLabel: _('xpoller2_question_type_radio')
+		                    ,hideLabel: true
+		                    ,name: 'type'
+		                    ,inputValue: 'radio'
+		                    ,checked: true
+		                },{
+		                    boxLabel: _('xpoller2_question_type_checkbox')
+		                    ,hideLabel: true
+		                    ,name: 'type'
+		                    ,inputValue: 'checkbox'
+		                }]
+		            }]
+			}
 		]
 		,keys: [{key: Ext.EventObject.ENTER,shift: true,fn: function() {this.submit() },scope: this}]
 	});
@@ -205,12 +225,34 @@ xPoller2.window.UpdateItem = function(config) {
 		title: _('xpoller2_question_update')
 		,id: this.ident
 		,height: 500
-		,width: 650
+		,width: 750
 		,url: xPoller2.config.connector_url
 		,action: 'mgr/question/update'
 		,fields: [
 			{xtype: 'hidden',name: 'id',id: 'xpoller2-'+this.ident+'-id'}
 			,{xtype: 'textfield',fieldLabel: _('xpoller2_question_text'),name: 'text',id: 'xpoller2-'+this.ident+'-text',anchor: '99%'}
+			,{
+				xtype: 'fieldset',
+				title: _('xpoller2_question_type'),
+				items: [{
+		                xtype: 'radiogroup'
+		                ,hideLabel: true
+		                ,items: [{
+		                    boxLabel: _('xpoller2_question_type_radio')
+		                    ,hideLabel: true
+		                    ,name: 'type'
+		                    ,inputValue: 'radio'
+		                    ,value: 'radio'
+		                    ,checked: true
+		                },{
+		                    boxLabel: _('xpoller2_question_type_checkbox')
+		                    ,hideLabel: true
+		                    ,name: 'type'
+		                    ,inputValue: 'checkbox'
+		                    ,value: 'radio'
+		                }]
+		            }]
+			}
             ,{
             	xtype: 'xpoller2-grid-options'
         		,preventRender: true

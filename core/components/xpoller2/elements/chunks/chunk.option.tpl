@@ -1,5 +1,5 @@
-  <div class="radio">
-    <label>
-      <input type="radio" value="[[+id]]" name="oid"> [[+option]]
-    </label>
-  </div>
+<div class="[[+type]]">
+	<label>
+	  <input type="[[+type]]" value="[[+id]]" name="oid[]"> [[+option]]
+	</label>
+</div>

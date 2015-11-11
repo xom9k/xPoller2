@@ -7,10 +7,10 @@ function resetForms() {
             if (btn.is('button, input[type="submit"], input[type="image"]') && btn.is('[name]'))
             if (!$(this).children("input[name=oid]")) return false;
             data = data + '&xp_action=' + btn.val();
-            // alert(html);
+            // alert(data);
             $.ajax({
                 type: "POST",
-                url: document.location.href,
+                url: xPoller2Config.actionUrl,
                 data: data,
                 success: function(html) {
                     parent.html(html);

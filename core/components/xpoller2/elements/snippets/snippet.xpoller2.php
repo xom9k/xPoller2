@@ -1,13 +1,14 @@
 <?php
 $xPoller2 = $modx->getService('xpoller2','xPoller2',$modx->getOption('xpoller2_core_path',null,$modx->getOption('core_path').'components/xpoller2/').'model/xpoller2/',$scriptProperties);
 if (!($xPoller2 instanceof xPoller2)) return '';
-$modx->regClientScript($modx->getOption('assets_url').'components/xpoller2/js/web/default.js');
 $modx->lexicon->load('xpoller2:translations');
 
-if (empty($formOuterTpl)) {$formOuterTpl = "tpl.xPoller2.form.outer";}
-if (empty($resultOuterTpl)) {$resultOuterTpl = "tpl.xPoller2.result.outer";}
-if (empty($optionTpl)) {$optionTpl = "tpl.xPoller2.option";}
-if (empty($resultTpl)) {$resultTpl = "tpl.xPoller2.result";}
+$formOuterTpl = $modx->getOption('formOuterTpl',$scriptProperties, "tpl.xPoller2.form.outer");
+$resultOuterTpl = $modx->getOption('resultOuterTpl',$scriptProperties, "tpl.xPoller2.result.outer");
+$resultTpl = $modx->getOption('resultTpl',$scriptProperties, "tpl.xPoller2.result");
+$optionTpl = $modx->getOption('optionTpl', $scriptProperties, "tpl.xPoller2.option"); 
+$allowGuest = $modx->getOption('allowGuest',$scriptProperties, 1); // Показывать форму по умолчанию
+
 if (empty($outputSeparator)) {$resultTpl = "\n";}
 if (empty($id)) {
     $q = $modx->newQuery( "xpQuestion" );
@@ -23,9 +24,9 @@ if (empty($id)) {
         return $modx->lexicon("xpoller2_question_err_ns");
     }
 }
-$allowGuest = $modx->getOption('allowGuest',$scriptProperties,1); // Показывать форму по умолчанию
+ 
 $hideForm = false;
-
+$xPoller2->saveSessionProperties($scriptProperties);
 if ($_REQUEST['qid'] && $_REQUEST['qid'] != $id) return '';
 
 $params = $_GET;
@@ -91,7 +92,7 @@ if (!$modx->user->isAuthenticated($modx->context->key)) {
 $q = $modx->newQuery('xpOption');
 $q->where(array('qid' => $id));
 $q->select('`xpOption`.`id`, `xpOption`.`qid`, `xpOption`.`option`, `xpOption`.`rank`,
-            `xpOption`.`right`, `xpQuestion`.`text`, COUNT(`xpAnswer`.`uid`) as `votes`');
+            `xpOption`.`right`, `xpQuestion`.`text`, `xpQuestion`.`type`, COUNT(`xpAnswer`.`uid`) as `votes`');
 $q->leftJoin('xpQuestion', 'xpQuestion', array('`xpOption`.`qid` = `xpQuestion`.`id`'));
 $q->leftJoin('xpAnswer',   'xpAnswer',   array('`xpAnswer`.`oid` = `xpOption`.`id`'));
 $q->groupby('`xpOption`.`id`');
@@ -103,9 +104,9 @@ print $q->toSQL();
 print "</pre>"; */
 $q->stmt->execute();
 $options = $q->stmt->fetchAll(PDO::FETCH_ASSOC);
-// print "<pre>";
-// print_r($options); 
-// print "</pre>";
+ //print "<pre>";
+ //print_r($options); 
+ //print "</pre>";
 if ($options) {
     $output = array();
     foreach ($options as $option) {
@@ -115,6 +116,7 @@ if ($options) {
     }
     // if (empty($output['text'])) $output['text'] = $options[0]['text'];  // Старый вывод, выводит вопрос из базы
     if (empty($output['text'])) $output['text'] = $modx->lexicon("question_" . $options[0]['qid']);
+    if (empty($output['type'])) $output['type'] = $options[0]['type'];
     if (empty($output['id'])) $output['id'] = $options[0]['qid'];
     foreach ($options as $option) {
         if($output['maxVotes'] != 0) {
@@ -140,7 +142,7 @@ if (!empty($toPlaceholder)) {
 
 if (!empty($isAjax)) {
     header('Content-type: text/html; charset=utf-8');
-    @session_write_close();
+    // @session_write_close();
     exit($output);
 }
 else {

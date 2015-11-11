@@ -45,6 +45,9 @@ $_lang['xpoller2_question_update'] = 'Изменить вопрос';
 $_lang['xpoller2_question_text'] = 'Вопрос';
 $_lang['xpoller2_questions'] = 'Вопросы';
 $_lang['xpoller2_question_closed'] = 'Закрыт';
+$_lang['xpoller2_question_type'] = 'Тип опроса';
+$_lang['xpoller2_question_type_radio'] = 'Одиночный';
+$_lang['xpoller2_question_type_checkbox'] = 'Множественный';
 
 $_lang['xpoller2_option_err_ae'] = 'Такой вариант уже есть.';
 $_lang['xpoller2_option_err_ae_right'] = 'Верный вариант ответа уже указан.';
@@ -68,6 +71,8 @@ $_lang['lexicon_export_desc'] = 'Здесь вы можете выбрать т�
 $_lang['lexicon_export'] = 'Экспорт темы словаря';
 $_lang['namespace'] = 'Пространство имен';
 $_lang['topic'] = 'Тема';
+
+
 
 
 
