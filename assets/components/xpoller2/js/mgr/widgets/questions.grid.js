@@ -200,7 +200,9 @@ xPoller2.window.CreateItem = function(config) {
 		                    ,hideLabel: true
 		                    ,name: 'type'
 		                    ,inputValue: 'radio'
-		                    ,checked: true
+		                    ,listeners: {fn:function(p) {
+		                            Ext.getCmp('xpoller2-'+this.ident+'-type').setValue(true);
+		                        },scope:this}
 		                },{
 		                    boxLabel: _('xpoller2_question_type_checkbox')
 		                    ,hideLabel: true
