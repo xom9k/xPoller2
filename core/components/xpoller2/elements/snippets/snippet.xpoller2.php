@@ -120,7 +120,7 @@ if ($options) {
     if (empty($output['id'])) $output['id'] = $options[0]['qid'];
     foreach ($options as $option) {
         if($output['maxVotes'] != 0) {
-            $option['percentVotes'] = str_replace(',', '.', str(round($option['votes'] / $output['maxVotes'] * 100, 2)));
+            $option['percentVotes'] = str_replace(',', '.', strval(round($option['votes'] / $output['maxVotes'] * 100, 2)));
         } else {
             $option['percentVotes'] = 0;
         }
