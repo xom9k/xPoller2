@@ -43,9 +43,8 @@ class xPoller2 {
 		$this->modx->lexicon->load('xpoller2:default');
 
 		if (!defined('MODX_API_MODE') || !MODX_API_MODE) {
-			$this->modx->regClientScript($this->config['jsUrl'].'web/default.js');
 			$this->modx->regClientCSS($this->config['cssUrl'].'web/default.css');
-			$this->modx->regClientStartupScript(preg_replace('#(\n|\t)#', '', '
+			$this->modx->regClientScript(preg_replace('#(\n|\t)#', '', '
 				<script type="text/javascript">
 				xPoller2Config = {
 					cssUrl: "' . $this->config['cssUrl'] . '",
@@ -53,6 +52,7 @@ class xPoller2 {
 					actionUrl: "' . $this->config['actionUrl'] . '"
 				};
 				</script>'), true);
+            $this->modx->regClientScript($this->config['jsUrl'].'web/default.js');
 			$this->modx->regClientStartupScript(preg_replace('#(\n|\t)#', '', '
 			<script type="text/javascript">
 			if (typeof jQuery == "undefined") {

@@ -7,16 +7,16 @@ $index_php = $current_dir .'index.php';
 $i=0;
 while( !file_exists( $index_php ) && $i < 9 )
 {
-	$current_dir = dirname(dirname($index_php)) .'/';
-	$index_php = $current_dir .'index.php';
-	$i++;
+    $current_dir = dirname(dirname($index_php)) .'/';
+    $index_php = $current_dir .'index.php';
+    $i++;
 }
 if( file_exists($index_php) )
 {
-	require_once $index_php;
+    require_once $index_php;
 }
 else {
-	print "Error. Dont require MODX."; die;
+    print "Error. Dont require MODX."; die;
 }
 // << Подключаем
 define('MODX_ACTION_MODE', true);
@@ -51,7 +51,7 @@ if (!$modx->user->isAuthenticated($modx->context->key)) {
 } else {
     $uid = $modx->user->id;
 }
-$uip = $_SERVER["REMOTE_ADDR"]; 
+$uip = $_SERVER["REMOTE_ADDR"];
 $abstain = false;
 
 if ($action == 'abstain') {
@@ -59,15 +59,21 @@ if ($action == 'abstain') {
     //$xPoller2->setxPoller2Cookie($qid);
 } else {
     if ($oid) {
-    	foreach($oid as $oVal) {
-    		$tmp = array('qid' => $id, 'uip' => $uip, 'uid' => $uid, 'oid' => $oVal);
-	        if (!$modx->getObject('xpAnswer', $tmp)) {
-	            //print $tmp['oid'];
-	            $answer = $modx->newObject('xpAnswer', $tmp);
-	            $answer->save();
-	        }
-	        unset($tmp);
-    	}
+        foreach($oid as $oVal) {
+            $tmp = array('qid' => $id, 'uip' => $uip, 'uid' => $uid, 'oid' => $oVal);
+            if (!$modx->getObject('xpAnswer', $tmp)) {
+                //print $tmp['oid'];
+                $answer = $modx->newObject('xpAnswer', $tmp);
+                $answer->save();
+            }
+            if ($option = $modx->getObject('xpOption',['id'=>$oVal])) {
+                $count_votes = $modx->getCount('xpAnswer', array('oid' => $oVal)) + $option->get('votes');
+                $option->set('votes', $count_votes);
+                $option->save();
+            }
+            unset($tmp);
+            unset($option);
+        }
         //$xPoller2->setxPoller2Cookie($qid);
     }
 }
@@ -98,9 +104,8 @@ if (!$modx->user->isAuthenticated($modx->context->key)) {
 $q = $modx->newQuery('xpOption');
 $q->where(array('qid' => $id));
 $q->select('`xpOption`.`id`, `xpOption`.`qid`, `xpOption`.`option`, `xpOption`.`rank`,
-            `xpOption`.`right`, `xpQuestion`.`text`, `xpQuestion`.`type`, COUNT(`xpAnswer`.`uid`) as `votes`');
+            `xpOption`.`right`, `xpQuestion`.`text`, `xpQuestion`.`type`, `xpOption`.`votes` as `votes`');
 $q->leftJoin('xpQuestion', 'xpQuestion', array('`xpOption`.`qid` = `xpQuestion`.`id`'));
-$q->leftJoin('xpAnswer',   'xpAnswer',   array('`xpAnswer`.`oid` = `xpOption`.`id`'));
 $q->groupby('`xpOption`.`id`');
 $q->sortby('`xpOption`.`id`', 'ASC');
 $q->prepare();
@@ -111,13 +116,13 @@ print "</pre>"; */
 $q->stmt->execute();
 $options = $q->stmt->fetchAll(PDO::FETCH_ASSOC);
 // print "<pre>";
-// print_r($options); 
+// print_r($options);
 // print "</pre>";
 if ($options) {
     $output = array();
+    $output['maxVotes'] = 0;
     foreach ($options as $option) {
-        if (empty($output['maxVotes'])) $output['maxVotes'] = $option['votes'];
-        
+        $output['maxVotes'] += $option['votes'];
         if ($output['maxVotes'] < $option['votes']) $output['maxVotes'] = $option['votes'];
     }
     // if (empty($output['text'])) $output['text'] = $options[0]['text'];  // Старый вывод, выводит вопрос из базы
@@ -127,7 +132,7 @@ if ($options) {
     // print_r($options);die;
     foreach ($options as $option) {
         if($output['maxVotes'] != 0) {
-            $option['percentVotes'] = round($option['votes'] / $output['maxVotes'] * 100, 2);
+            $option['percentVotes'] = str_replace(',','.',round($option['votes'] / $output['maxVotes'] * 100, 2));
         } else {
             $option['percentVotes'] = 0;
         }
