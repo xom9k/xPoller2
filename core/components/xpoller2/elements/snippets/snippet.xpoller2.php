@@ -6,7 +6,7 @@ $modx->lexicon->load('xpoller2:translations');
 $formOuterTpl = $modx->getOption('formOuterTpl',$scriptProperties, "tpl.xPoller2.form.outer");
 $resultOuterTpl = $modx->getOption('resultOuterTpl',$scriptProperties, "tpl.xPoller2.result.outer");
 $resultTpl = $modx->getOption('resultTpl',$scriptProperties, "tpl.xPoller2.result");
-$optionTpl = $modx->getOption('optionTpl', $scriptProperties, "tpl.xPoller2.option"); 
+$optionTpl = $modx->getOption('optionTpl', $scriptProperties, "tpl.xPoller2.option");
 $allowGuest = $modx->getOption('allowGuest',$scriptProperties, 1); // Показывать форму по умолчанию
 
 if (empty($outputSeparator)) {$resultTpl = "\n";}
@@ -24,7 +24,7 @@ if (empty($id)) {
         return $modx->lexicon("xpoller2_question_err_ns");
     }
 }
- 
+
 $hideForm = false;
 $xPoller2->saveSessionProperties($scriptProperties);
 if ($_REQUEST['qid'] && $_REQUEST['qid'] != $id) return '';
@@ -38,7 +38,7 @@ if (!$modx->user->isAuthenticated($modx->context->key)) {
 } else {
     $uid = $modx->user->id;
 }
-$uip = $_SERVER["REMOTE_ADDR"]; 
+$uip = $_SERVER["REMOTE_ADDR"];
 $abstain = false;
 
 if (!empty($_REQUEST['xp_action']) && $_REQUEST['qid']) {
@@ -92,9 +92,8 @@ if (!$modx->user->isAuthenticated($modx->context->key)) {
 $q = $modx->newQuery('xpOption');
 $q->where(array('qid' => $id));
 $q->select('`xpOption`.`id`, `xpOption`.`qid`, `xpOption`.`option`, `xpOption`.`rank`,
-            `xpOption`.`right`, `xpQuestion`.`text`, `xpQuestion`.`type`, COUNT(`xpAnswer`.`uid`) as `votes`');
+            `xpOption`.`right`, `xpQuestion`.`text`, `xpQuestion`.`type`, `xpOption`.`votes` as `votes`');
 $q->leftJoin('xpQuestion', 'xpQuestion', array('`xpOption`.`qid` = `xpQuestion`.`id`'));
-$q->leftJoin('xpAnswer',   'xpAnswer',   array('`xpAnswer`.`oid` = `xpOption`.`id`'));
 $q->groupby('`xpOption`.`id`');
 $q->sortby('`xpOption`.`id`', 'ASC');
 $q->prepare();
@@ -104,23 +103,24 @@ print $q->toSQL();
 print "</pre>"; */
 $q->stmt->execute();
 $options = $q->stmt->fetchAll(PDO::FETCH_ASSOC);
- //print "<pre>";
- //print_r($options); 
- //print "</pre>";
+//print "<pre>";
+//print_r($options);
+//print "</pre>";
 if ($options) {
     $output = array();
+    $output['maxVotes'] = 0;
     foreach ($options as $option) {
-        if (empty($output['maxVotes'])) $output['maxVotes'] = $option['votes'];
-        
+        $output['maxVotes'] += $option['votes'];
         if ($output['maxVotes'] < $option['votes']) $output['maxVotes'] = $option['votes'];
     }
     // if (empty($output['text'])) $output['text'] = $options[0]['text'];  // Старый вывод, выводит вопрос из базы
     if (empty($output['text'])) $output['text'] = $modx->lexicon("question_" . $options[0]['qid']);
     if (empty($output['type'])) $output['type'] = $options[0]['type'];
     if (empty($output['id'])) $output['id'] = $options[0]['qid'];
+
     foreach ($options as $option) {
         if($output['maxVotes'] != 0) {
-            $option['percentVotes'] = round($option['votes'] / $output['maxVotes'] * 100, 2);
+            $option['percentVotes'] = str_replace(',','.',round($option['votes'] / $output['maxVotes'] * 100, 2));
         } else {
             $option['percentVotes'] = 0;
         }
